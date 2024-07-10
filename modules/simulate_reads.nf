@@ -9,6 +9,7 @@ params.dataset_sample_size = 1
 params.dataset_index = "public_database_accession"
 params.dataset_coverage = "10k"
 params.reference_dir = "store/references"
+params.dataset_dir = "store/datasets"
 
 params.simulator = "badread" // Default simulator
 params.input_fasta = "genome.fasta" // Input reference genome
@@ -63,62 +64,68 @@ process download_reference_fasta {
     """
 }
 
-
 process download_dataset_accession {
+    storeDir "${params.dataset_dir}/"
     input:
     tuple val(accession), val(platform)
-    val coverage
 
     output:
-    path "*.fq.gz"
+    path("${accession}/*.fastq.gz")
+    tuple val(accession), val(platform), path("${accession}/*_pass_1.fastq.gz"), path("${accession}/*_pass_2.fastq.gz"), optional: true, emit:paired
+    tuple val(accession), val(platform), path("${accession}/*_pass.fastq.gz"), val(null), optional:true, emit: unpaired
 
     script:
-    paired_flag = ""
-    if ("${platform}" == "illumina"){
-        paired_flag = " --paired"
-    }
     """
-    python $launchDir/bin/download_sra_accession.py --accession ${accession} --coverage ${coverage} ${paired_flag}
+    prefetch ${accession}
+    fastq-dump --outdir ${accession} --gzip --skip-technical --readids --read-filter pass --dumpbase --split-3 --clip */*.sra
     """
 }
 
-process simulate_reads {
-    tag "${params.simulator}"
-    
+process downsample_dataset_accession {
     input:
-    path fasta_file from params.input_fasta
-    
+    tuple val(accession), path(raw_reads)
+    val coverage
+
     output:
-    path "${params.output_dir}/simulated_reads.fasta" into simulated_reads
-    
+    path "${accession}.fastq.gz"
+
     script:
-    if (params.simulator == "badread") {
-        """
-        badread simulate --reference ${fasta_file} --quantity ${params.reads_count}x --output ${params.output_dir}/simulated_reads.fasta
-        """
-    } else if (params.simulator == "nanosim") {
-        """
-        NanoSim-2.6.0/src/simulator.py fasta -i ${fasta_file} -o ${params.output_dir}/simulated_reads -n ${params.reads_count}
-        """
-    } else if (params.simulator == "wgsim") {
-        """
-        wgsim -N ${params.reads_count} -1 150 -2 150 -r 0.001 -R 0.15 ${fasta_file} ${params.output_dir}/simulated_reads_1.fq ${params.output_dir}/simulated_reads_2.fq
-        """
-    } else {
-        error "Unsupported simulator: ${params.simulator}"
-    }
+    """
+    rasusa reads --bases ${coverage} ${raw_reads} -o "${accession}.fastq.gz"
+    """
+}
+
+process downsample_dataset_accession_paired {
+    input:
+    tuple val(accession), path(raw_reads1), path(raw_reads2)
+    val coverage
+
+    output:
+    path "${accession}_*.fastq.gz"
+
+    script:
+    """
+    rasusa reads --bases ${coverage} ${raw_reads1} ${raw_reads2} -o "${accession}_1.fastq.gz" -o "${accession}_2.fastq.gz"
+    """
 }
 
 workflow {
     main:
-        reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
-        subset_reference_accessions(reference_csv, params.reference_sample_size)
-        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}") }.set{ reference_tuples }
-        download_reference_fasta(reference_tuples.unique())
+        //reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
+        //subset_reference_accessions(reference_csv, params.reference_sample_size)
+        //subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}") }.set{ reference_tuples }
+        //download_reference_fasta(reference_tuples.unique())
 
         dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
         subset_dataset_accessions(dataset_csv, params.dataset_sample_size)
-        subset_dataset_accessions.out.splitCsv(header: true).map { row -> tuple("${row.public_database_accession}", "${row.platform}") }.set{ dataset_tuples }
-        dataset_tuples.view()
-        download_dataset_accession(dataset_tuples, params.dataset_coverage)
+        subset_dataset_accessions.out.splitCsv(header: true).unique().map{row -> ["${row.public_database_accession}","${row.platform}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
+        dataset_accessions.view()
+        dataset_accessions.branch { accession, platform, reads1, reads2 ->
+                    download: reads1 == ""
+                        return tuple(accession, platform)
+                    other: true
+                        return tuple(accession, platform, reads1, reads2)
+                    }.set { result }
+        download_dataset_accession(result.download)
+        download_dataset_accession.out.paired.concat(download_dataset_accession.out.unpaired).view()
 }
