@@ -5,7 +5,7 @@ nextflow.enable.dsl=2
 params.reference_csv = ""
 params.dataset_csv = ""
 params.reference_sample_size = 1
-params.dataset_sample_size = 1
+params.dataset_sample_size = 3
 params.dataset_index = "public_database_accession"
 params.dataset_coverage = "10k"
 params.reference_dir = "store/references"
@@ -70,9 +70,22 @@ process download_dataset_accession {
     tuple val(accession), val(platform)
 
     output:
-    path("${accession}/*.fastq.gz")
-    tuple val(accession), val(platform), path("${accession}/*_pass_1.fastq.gz"), path("${accession}/*_pass_2.fastq.gz"), optional: true, emit:paired
-    tuple val(accession), val(platform), path("${accession}/*_pass.fastq.gz"), val(null), optional:true, emit: unpaired
+    tuple val(accession), val(platform), path("${accession}/*_pass.fastq.gz")
+
+    script:
+    """
+    prefetch ${accession}
+    fastq-dump --outdir ${accession} --gzip --skip-technical --readids --read-filter pass --dumpbase --split-3 --clip */*.sra
+    """
+}
+
+process download_dataset_accession_paired {
+    storeDir "${params.dataset_dir}/"
+    input:
+    tuple val(accession), val(platform)
+
+    output:
+    tuple val(accession), val(platform), path("${accession}/*_pass_1.fastq.gz"), path("${accession}/*_pass_2.fastq.gz")
 
     script:
     """
@@ -83,44 +96,71 @@ process download_dataset_accession {
 
 process downsample_dataset_accession {
     input:
-    tuple val(accession), val(platform), path(raw_reads1)
+    tuple val(accession), val(platform), val(index), path(raw_reads1)
     val coverage
 
     output:
-    tuple val(accession), val(platform), path("${accession}.subsampled.fastq.gz")
+    tuple val(accession), val(platform), val(index), path("${accession}.subsampled.fastq.gz")
 
     script:
-    if ("${platform}" == "illumina"){
     """
     rasusa reads --bases ${coverage} ${raw_reads1} -o "${accession}.subsampled.fastq.gz"
     """
-    } else {
-    """
-    rasusa reads --bases ${coverage} ${raw_reads1} ${raw_reads2} -o "${accession}_1.subsampled.fastq.gz" -o "${accession}_2.subsampled.fastq.gz"
-    """
-    }
 }
 
 process downsample_dataset_accession_paired {
     input:
-    tuple val(accession), val(platform), path(raw_reads1), path(raw_reads2)
+    tuple val(accession), val(platform), val(index), path(raw_reads1), path(raw_reads2)
     val coverage
 
     output:
-    tuple val(accession), val(platform), path("${accession}_1.subsampled.fastq.gz"), path("${accession}_2.subsampled.fastq.gz"), optional: true
+    tuple val(accession), val(platform), val(index), path("${accession}_1.subsampled.fastq.gz"), path("${accession}_2.subsampled.fastq.gz")
 
     script:
-    if ("${platform}" == "illumina"){
-    """
-    rasusa reads --bases ${coverage} ${raw_reads1} -o "${accession}.subsampled.fastq.gz"
-    """
-    } else {
     """
     rasusa reads --bases ${coverage} ${raw_reads1} ${raw_reads2} -o "${accession}_1.subsampled.fastq.gz" -o "${accession}_2.subsampled.fastq.gz"
     """
-    }
 }
 
+workflow download_and_downsample {
+    take:
+        dataset_row
+    main:
+        dataset_row.branch { accession, platform, index, reads1 ->
+            download: reads1 == ""
+                return tuple(accession, platform, index)
+            other: true
+                return tuple(accession, platform, index, reads1)
+            }.set { result }
+        result.download.tap{ to_download }
+        download_dataset_accession(to_download.map{ accession, platform, index -> [accession, platform] }.unique())
+        result.download.combine(download_dataset_accession.out, by: 0).map{ accession, platform, index, platform1, reads1 -> [accession, platform, index, reads1]}.set{downloaded}
+        result.other.concat(downloaded).set{ to_downsample }
+        downsample_dataset_accession(to_downsample, "${params.dataset_coverage}")
+        downsample_dataset_accession.out.view()
+    emit:
+        downsample_dataset_accession.out
+}
+
+workflow download_and_downsample_paired {
+    take:
+        dataset_row
+    main:
+        dataset_row.branch { accession, platform, index, reads1, reads2 ->
+            download: reads1 == ""
+                return tuple(accession, platform, index)
+            other: true
+                return tuple(accession, platform, index, reads1, reads2)
+            }.set { result }
+        result.download.tap{ to_download }
+        download_dataset_accession_paired(to_download.map{ accession, platform, index -> [accession, platform] }.unique())
+        result.download.combine(download_dataset_accession_paired.out, by: 0).map{ accession, platform, index, platform1, reads1, reads2 -> [accession, platform, index, reads1, reads2]}.set{downloaded}
+        result.other.concat(downloaded).set{ to_downsample }
+        downsample_dataset_accession_paired(to_downsample, "${params.dataset_coverage}")
+        downsample_dataset_accession_paired.out.view()
+    emit:
+        downsample_dataset_accession_paired.out
+}
 
 workflow {
     main:
@@ -131,19 +171,17 @@ workflow {
 
         dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
         subset_dataset_accessions(dataset_csv, params.dataset_sample_size)
-        subset_dataset_accessions.out.splitCsv(header: true).unique().map{row -> ["${row.public_database_accession}","${row.platform}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
+        subset_dataset_accessions.out.splitCsv(header: true).map{row -> ["${row.public_database_accession}","${row.platform}","${row.index}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
 
-        dataset_accessions.branch { accession, platform, reads1, reads2 ->
-                    download: reads1 == ""
-                        return tuple(accession, platform)
-                    other: true
-                        return tuple(accession, platform, reads1, reads2)
-                    }.set { result }
-        download_dataset_accession(result.download)
-        download_dataset_accession.out.paired.concat(download_dataset_accession.out.unpaired, result.other).set{to_downsample}
+        dataset_accessions.branch { accession, platform, index, reads1, reads2 ->
+            paired: platform == "illumina"
+                return tuple(accession, platform, index, reads1, reads2)
+            unpaired: true
+                return tuple(accession, platform, index, reads1)
+            }.set { by_platform }
 
-
-        downsample_dataset_accession(to_downsample, "${params.dataset_coverage}")
-
-
+        download_and_downsample_paired(by_platform.paired)
+        download_and_downsample(by_platform.unpaired)
+        //download_and_downsample.out.concat(download_and_downsample_paired.out).set{ datasets }
+        //datasets.view()
 }

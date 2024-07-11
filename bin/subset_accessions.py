@@ -24,11 +24,17 @@ def select_random_rows(input_csv, output_csv, category_column, sample_size):
         num_with_replacement = sample_size - num_without_replacement
         if num_with_replacement > 0:
             chosen = random.choices(range(len(rows)), k=num_with_replacement)
-            selected_rows.extend([rows[i] for i in chosen])
-    
+            selected_rows.extend([rows[i].copy() for i in chosen])
+
+    # add an index
+    i = 0
+    for row in selected_rows:
+        row["index"] = i
+        i+=1
+
     # Write the selected rows to a new CSV file
     with open(output_csv, mode='w', newline='') as outfile:
-        writer = csv.DictWriter(outfile, fieldnames=reader.fieldnames)
+        writer = csv.DictWriter(outfile, fieldnames=reader.fieldnames + ["index"])
         writer.writeheader()
         writer.writerows(selected_rows)
 
