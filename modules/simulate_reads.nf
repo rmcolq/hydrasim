@@ -3,18 +3,18 @@
 nextflow.enable.dsl=2
 
 params.reference_csv = ""
-params.dataset_csv = ""
 params.reference_sample_size = 1
+params.reference_dir = "store/references"
+
+params.dataset_csv = ""
 params.dataset_sample_size = 3
 params.dataset_index = "public_database_accession"
 params.dataset_coverage = "10k"
-params.reference_dir = "store/references"
 params.dataset_dir = "store/datasets"
 
-params.simulator = "badread" // Default simulator
-params.input_fasta = "genome.fasta" // Input reference genome
-params.output_dir = "./output" // Output directory
-params.reads_count = 100000 // Number of reads to simulate
+params.simulators = ["badread","wgsim"]
+params.coverages = [0.1, 1, 10, 100]
+params.output_dir = "output" // Output directory
 
 process subset_reference_accessions {
     input:
@@ -52,7 +52,7 @@ process download_reference_fasta {
     tuple val(accession), val(category)
 
     output:
-    path "${accession}_genomic.fna"
+    tuple val(accession), val(category), path("${accession}_genomic.fna")
 
     script:
     """
@@ -122,6 +122,35 @@ process downsample_dataset_accession_paired {
     """
 }
 
+process simulate_reads {
+    input:
+        tuple val(simulator), val(coverage), val(accession), val(category), val(index), path(fasta)
+
+    output:
+        tuple val(accession), val(category), val(index), val(read_type), val(coverage), path("${accession}_${index}_${simulator}_${coverage}x_reads*.fq.gz")
+
+    script:
+    read_type = "other"
+    if ("${simulator}" == "badread") {
+        read_type = "ont"
+        """
+        badread simulate --reference ${fasta} --quantity ${coverage}x > ${accession}_${index}_${simulator}_${coverage}x_reads.fq
+        gzip ${accession}_${index}_${simulator}_${coverage}x_reads.fq
+        """
+    } else if ("${simulator}" == "wgsim") {
+        read_type = "illumina"
+        """
+        genome_length=\$(cat ${fasta} | wc -c)
+        num_reads=\$(echo "\$genome_length*${coverage}/300" | bc)
+        echo "\$genome_length \$num_reads"
+        wgsim -N \$num_reads -1 150 -2 150 -r 0.001 -R 0.15 ${fasta} ${accession}_${index}_${simulator}_${coverage}x_reads_1.fq ${accession}_${index}_${simulator}_${coverage}x_reads_2.fq
+        gzip ${accession}_${index}_${simulator}_${coverage}x_reads_1.fq ${accession}_${index}_${simulator}_${coverage}x_reads_2.fq
+        """
+    } else {
+        error "Unsupported simulator: ${simulator}"
+    }
+}
+
 workflow download_and_downsample {
     take:
         dataset_row
@@ -160,6 +189,19 @@ workflow download_and_downsample_paired {
         downsample_dataset_accession_paired.out
 }
 
+workflow get_reference_fastas {
+    main:
+        reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
+        subset_reference_accessions(reference_csv, params.reference_sample_size)
+        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
+        reference_accessions.tap{ to_download }
+
+        download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
+        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [accession, category, index, fasta]}.set{downloaded}
+    emit:
+        downloaded
+}
+
 workflow get_base_datasets {
     main:
         dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
@@ -181,24 +223,21 @@ workflow get_base_datasets {
         datasets
 }
 
-workflow get_references {
+workflow simulate_reference_reads {
+    take:
+        references
     main:
-        reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
-        subset_reference_accessions(reference_csv, params.reference_sample_size)
-        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
-        reference_accessions.tap{ to_download }
-
-        download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
-        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [accession, category, index, fasta]}.set{downloaded}
-        //downloaded.view()
-    emit:
-        downloaded
+        simulators = channel.from(params.simulators)
+        coverages = channel.from(params.coverages)
+        simulators.combine(coverages).combine(references).set{ combinations }
+        combinations.view()
+        simulate_reads(combinations)
 }
 
 workflow {
     main:
-        reference_fasta = get_references()
-        reference_fasta.view()
-        base_datasets = get_base_datasets()
-        base_datasets.view()
+        get_reference_fastas()
+        //base_datasets = get_base_datasets()
+        //base_datasets.view()
+        simulate_reference_reads(get_reference_fastas.out)
 }
