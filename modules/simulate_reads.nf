@@ -137,7 +137,6 @@ workflow download_and_downsample {
         result.download.combine(download_dataset_accession.out, by: 0).map{ accession, platform, index, platform1, reads1 -> [accession, platform, index, reads1]}.set{downloaded}
         result.other.concat(downloaded).set{ to_downsample }
         downsample_dataset_accession(to_downsample, "${params.dataset_coverage}")
-        downsample_dataset_accession.out.view()
     emit:
         downsample_dataset_accession.out
 }
@@ -157,18 +156,12 @@ workflow download_and_downsample_paired {
         result.download.combine(download_dataset_accession_paired.out, by: 0).map{ accession, platform, index, platform1, reads1, reads2 -> [accession, platform, index, reads1, reads2]}.set{downloaded}
         result.other.concat(downloaded).set{ to_downsample }
         downsample_dataset_accession_paired(to_downsample, "${params.dataset_coverage}")
-        downsample_dataset_accession_paired.out.view()
     emit:
         downsample_dataset_accession_paired.out
 }
 
-workflow {
+workflow get_base_datasets {
     main:
-        //reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
-        //subset_reference_accessions(reference_csv, params.reference_sample_size)
-        //subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}") }.set{ reference_tuples }
-        //download_reference_fasta(reference_tuples.unique())
-
         dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
         subset_dataset_accessions(dataset_csv, params.dataset_sample_size)
         subset_dataset_accessions.out.splitCsv(header: true).map{row -> ["${row.public_database_accession}","${row.platform}","${row.index}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
@@ -182,6 +175,30 @@ workflow {
 
         download_and_downsample_paired(by_platform.paired)
         download_and_downsample(by_platform.unpaired)
-        //download_and_downsample.out.concat(download_and_downsample_paired.out).set{ datasets }
+        download_and_downsample.out.concat(download_and_downsample_paired.out).set{ datasets }
         //datasets.view()
+    emit:
+        datasets
+}
+
+workflow get_references {
+    main:
+        reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
+        subset_reference_accessions(reference_csv, params.reference_sample_size)
+        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
+        reference_accessions.tap{ to_download }
+
+        download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
+        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [accession, category, index, fasta]}.set{downloaded}
+        //downloaded.view()
+    emit:
+        downloaded
+}
+
+workflow {
+    main:
+        reference_fasta = get_references()
+        reference_fasta.view()
+        base_datasets = get_base_datasets()
+        base_datasets.view()
 }
