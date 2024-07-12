@@ -16,21 +16,24 @@ def select_random_rows(input_csv, output_csv, category_column, sample_size):
     # Randomly select 10 rows from each group
     selected_rows = []
     for category, rows in grouped_data.items():
+        category_rows = []
         print (len(rows), sample_size, type(rows))
         num_without_replacement = min(len(rows), sample_size)
         chosen = random.sample(range(len(rows)), num_without_replacement)
-        selected_rows.extend([rows[i] for i in chosen])
+        category_rows.extend([rows[i] for i in chosen])
 
         num_with_replacement = sample_size - num_without_replacement
         if num_with_replacement > 0:
             chosen = random.choices(range(len(rows)), k=num_with_replacement)
-            selected_rows.extend([rows[i].copy() for i in chosen])
+            category_rows.extend([rows[i].copy() for i in chosen])
 
-    # add an index
-    i = 0
-    for row in selected_rows:
-        row["index"] = i
-        i+=1
+        # add an index
+        i = 0
+        for row in category_rows:
+            row["index"] = i
+            i+=1
+
+        selected_rows.extend(category_rows)
 
     # Write the selected rows to a new CSV file
     with open(output_csv, mode='w', newline='') as outfile:
