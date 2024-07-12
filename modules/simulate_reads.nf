@@ -13,6 +13,7 @@ params.dataset_coverage = "10k"
 params.dataset_dir = "store/datasets"
 
 params.simulators = ["badread","wgsim"]
+lookup = ["illumina": "wgsim", "ont": "badread"]
 params.coverages = [0.1, 1, 10, 100]
 params.output_dir = "output" // Output directory
 
