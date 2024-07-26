@@ -1,0 +1,5 @@
+accession,taxon_id,path,test,category_id,category_name,domain
+GCA_000864885.1,227984,,hcid,2901879,Severe acute respiratory syndrome (SARS),Virus
+GCA_000901155.1,1235996,,hcid,1335626,Middle East respiratory syndrome (MERS),Virus
+GCA_000857325.2,33727,,hcid,3052505,Marburg virus disease (MVD),Virus
+GCA_000857325.3,33727,,hcid,3052505,Marburg virus disease (MVD),Virus

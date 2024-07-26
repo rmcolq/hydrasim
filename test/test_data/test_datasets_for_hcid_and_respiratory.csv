@@ -1,0 +1,4 @@
+climb_id,platform,study_id,public_database_accession,human_filtered_reads_1,human_filtered_reads_2
+C-E745C4D928,illumina,PRJNA818777,SRX25254342,/home/phe.gov.uk/nicholas.ellaby/Documents/mSCAPE/synthetic_data/SRR29753325_1.fastq,/home/phe.gov.uk/nicholas.ellaby/Documents/mSCAPE/synthetic_data/SRR29753325_2.fastq
+blah,ont,,SRX25243158,,
+blah,ont,,SRX25243158,,
