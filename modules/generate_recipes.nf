@@ -177,7 +177,7 @@ workflow generate_recipes {
         // references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
         //paired_recipes.view()
         //unpaired_recipes.view()
-     emit:
-        paired = paired_recipes
-        unpaired = unpaired_recipes
+    //  emit:
+    //     paired = paired_recipes
+    //     unpaired = unpaired_recipes
 }
