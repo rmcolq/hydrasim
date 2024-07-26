@@ -1,4 +1,7 @@
 #!/usr/bin/env nextflow
+import java.nio.file.Paths
+
+
 def scriptDir = workflow.projectDir
 
 def generateRecipesPath = Paths.get(scriptDir.toString(), '../modules/generate_recipes').toAbsolutePath().normalize().toString()
