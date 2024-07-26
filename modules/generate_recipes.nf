@@ -96,7 +96,6 @@ process download_dataset_accession_paired {
     """
 }
 
-
 workflow get_base_fastq {
     take:
         dataset_row
@@ -137,13 +136,13 @@ workflow get_reference_fastas {
     main:
         reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
         subset_reference_accessions(scriptDir, reference_csv, params.num_iterations)
-        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
+    //     subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
-        reference_accessions.tap{ to_download }
-        download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
-        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
-    emit:
-        downloaded
+    //     reference_accessions.tap{ to_download }
+    //     download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
+    //     reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
+    // emit:
+    //     downloaded
 }
 
 workflow get_base_datasets {
@@ -170,12 +169,12 @@ workflow get_base_datasets {
 workflow generate_recipes {
     main:
         get_reference_fastas()
-        coverages = channel.from(params.coverages)
-        get_reference_fastas.out.combine(coverages).set{ references }
+        // coverages = channel.from(params.coverages)
+        // get_reference_fastas.out.combine(coverages).set{ references }
 
-        get_base_datasets()
-        references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
-        references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
+        // get_base_datasets()
+        // references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
+        // references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
         //paired_recipes.view()
         //unpaired_recipes.view()
      emit:

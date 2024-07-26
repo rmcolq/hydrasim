@@ -139,8 +139,8 @@ workflow generate_paired {
 workflow {
     main:
         generate_recipes()
-        generate_unpaired(generate_recipes.out.unpaired)
-        generate_paired(generate_recipes.out.paired)
-        generate_unpaired.out.view()
-        generate_paired.out.view()
+        // generate_unpaired(generate_recipes.out.unpaired)
+        // generate_paired(generate_recipes.out.paired)
+        // generate_unpaired.out.view()
+        // generate_paired.out.view()
 }
