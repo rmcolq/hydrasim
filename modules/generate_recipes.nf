@@ -16,7 +16,6 @@ params.output_dir = "output" // Output directory
 
 def scriptDir = workflow.projectDir
 
-
 process subset_reference_accessions {
     input:
     path scriptDir
