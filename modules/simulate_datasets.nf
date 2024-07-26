@@ -4,7 +4,7 @@ import java.nio.file.Paths
 
 scriptDir = workflow.projectDir
 
-generateRecipesPath = Paths.get(scriptDir.toString(), '../modules/generate_recipes').toAbsolutePath().normalize().toString()
+generateRecipesPath = File.get(scriptDir.toString(), '../modules/generate_recipes').toAbsolutePath().normalize().toString()
 
 include { generate_recipes } from generateRecipesPath
 
@@ -139,8 +139,8 @@ workflow generate_paired {
 workflow {
     main:
         generate_recipes()
-        // generate_unpaired(generate_recipes.out.unpaired)
-        // generate_paired(generate_recipes.out.paired)
-        // generate_unpaired.out.view()
-        // generate_paired.out.view()
+        generate_unpaired(generate_recipes.out.unpaired)
+        generate_paired(generate_recipes.out.paired)
+        generate_unpaired.out.view()
+        generate_paired.out.view()
 }
