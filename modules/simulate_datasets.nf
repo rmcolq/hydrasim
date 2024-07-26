@@ -1,8 +1,9 @@
 #!/usr/bin/env nextflow
 def scriptDir = workflow.projectDir
 
+generate_recipes_path = ${scriptDir}+'../modules/generate_recipes'
 
-include { generate_recipes } from ${scriptDir}+'../modules/generate_recipes'
+include { generate_recipes } from generate_recipes_path
 
 params.dataset_coverage = "10k"
 params.lookup = ["illumina": "wgsim", "ont": "badread"]
