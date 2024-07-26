@@ -1,4 +1,6 @@
 #!/usr/bin/env nextflow
+launchDir = workflow.launchDir
+
 
 include { generate_recipes } from '../modules/generate_recipes'
 

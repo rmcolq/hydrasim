@@ -14,8 +14,12 @@ params.coverages = [0.1, 1, 10, 100]
 params.num_iterations = 1
 params.output_dir = "output" // Output directory
 
+def scriptDir = workflow.projectDir
+
+
 process subset_reference_accessions {
     input:
+    path scriptDir
     path reference_csv
     val sample_size
 
@@ -24,12 +28,13 @@ process subset_reference_accessions {
 
     script:
     """
-    python $launchDir/bin/subset_accessions.py ${reference_csv} "references.csv" category_id ${sample_size}
+    python ${scriptDir}/../bin/subset_accessions.py ${reference_csv} "references.csv" category_id ${sample_size} 
     """
 }
 
 process subset_dataset_accessions {
     input:
+    path scriptDir
     path dataset_csv
     val sample_size
 
@@ -38,7 +43,7 @@ process subset_dataset_accessions {
 
     script:
     """
-    python $launchDir/bin/subset_accessions.py ${dataset_csv} "dataset.csv" platform ${sample_size}
+    python ${scriptDir}/../bin/subset_accessions.py ${dataset_csv} "dataset.csv" platform ${sample_size} 
     """
 }
 
@@ -132,7 +137,7 @@ workflow get_base_fastq_paired {
 workflow get_reference_fastas {
     main:
         reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
-        subset_reference_accessions(reference_csv, params.num_iterations)
+        subset_reference_accessions(scriptDir, reference_csv, params.num_iterations)
         subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
         reference_accessions.tap{ to_download }
@@ -145,7 +150,7 @@ workflow get_reference_fastas {
 workflow get_base_datasets {
     main:
         dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
-        subset_dataset_accessions(dataset_csv, params.num_iterations)
+        subset_dataset_accessions(scriptDir, dataset_csv, params.num_iterations)
         subset_dataset_accessions.out.splitCsv(header: true).map{row -> ["${row.public_database_accession}","${row.platform}","${row.index}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
 
         dataset_accessions.branch { accession, platform, index, reads1, reads2 ->
