@@ -6,7 +6,7 @@ def scriptDir = workflow.projectDir
 
 def generateRecipesPath = Paths.get(scriptDir.toString(), '../modules/generate_recipes').toAbsolutePath().normalize().toString()
 
-include { generate_recipes } from ${generate_recipes_path}
+include { generate_recipes } from generate_recipes_path
 
 params.dataset_coverage = "10k"
 params.lookup = ["illumina": "wgsim", "ont": "badread"]
