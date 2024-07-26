@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nfellaby/hydrasim/main/nextflow_schema.json",
+    "title": "hydrasim",
+    "description": "Generating Synethetic Datasets",
+    "url": "https://github.com/nfellaby/hydrasim",
+    "type": "object",
+    "definitions": {
+        "input_options": {
+            "title": "Input Options",
+            "type": "object",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "proprties": {
+                "hcid_fp": {
+                    "type": "string",
+                    "format": "file-path",
+                    "title": "HCID_FP",
+                    "description": "File path for HCID Accession CSV",
+                    "help_text": "A filepath containing pointing to a csv containing the following information: 'accession', 'taxon_id', 'path', 'test', 'category_id', 'category_name', and 'domain'",
+                    "demo_data": "test/test_data/test_hcid_accessions.csv"
+                },
+                "datasets_fp": {
+                    "type": "string",
+                    "format": "file-path",
+                    "title": "DATASET_FP",
+                    "description": "File path for 'datasets for HCID and respiratory' CSV",
+                    "help_text": "A filepath containing pointing to a csv containing the following information: 'climb_id', 'platform', 'study_id', 'public_database_accession', 'human_filtered_reads_1', 'human_filtered_reads_2'",
+                    "demo_data": "test/test_data/test_datasets_for_hcid_and_respiratory.csv"
+                },
+                "unique_id": {
+                    "type": "string",
+                    "title": "The unique ID for this analysis",
+                    "description": "A unique ID for this analysis."
+                  }
+            }
+        },
+        "output_options": {
+            "title": "Output Options",
+            "type": "object",
+            "description": "Parameters for saving and naming workflow outputs.",
+            "default": "",
+            "properties": {
+              "outdir": {
+                "type": "string",
+                "format": "directory-path",
+                "default": "output",
+                "title": "Output folder name",
+                "description": "Directory for output of all user-facing files."
+              }
+            }
+          }
+
+    },
+    "docs": {
+        "links": "## Useful links\n\n* [nextflow](https://www.nextflow.io/)\n* [docker](https://www.docker.com/products/docker-desktop)"
+        }
+}
