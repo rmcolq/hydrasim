@@ -1,0 +1,15 @@
+name: hydrasim
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - nextflow
+  - badread
+  - ncbi-datasets-cli
+  - rasusa
+  - sra-tools
+  - pip
+  - biopython
+  - pandas
