@@ -5,6 +5,8 @@ nextflow.enable.dsl=2
 process subset_reference_accessions {
     label "process_low"
 
+    container "${params.wf.container}:${params.wf.container_version}"
+
     input:
     path reference_csv
     val sample_size
@@ -20,6 +22,8 @@ process subset_reference_accessions {
 
 process subset_dataset_accessions {
     label "process_low"
+
+    container "${params.wf.container}:${params.wf.container_version}"
 
     input:
     path dataset_csv
@@ -37,6 +41,9 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     
+    conda "conda-forge::ncbi-datasets-cli"
+    container "${params.wf.container}:${params.wf.container_version}"
+
     storeDir "${params.reference_dir}/${category}"
 
     input:
@@ -56,6 +63,11 @@ process download_reference_fasta {
 }
 
 process download_dataset_accession {
+    label "process_low"
+
+    conda "bioconda::sra-tools"
+    container "${params.wf.container}:${params.wf.container_version}"
+
     storeDir "${params.dataset_dir}/"
     input:
     tuple val(accession), val(platform)
@@ -71,6 +83,11 @@ process download_dataset_accession {
 }
 
 process download_dataset_accession_paired {
+    label "process_low"
+    
+    conda "bioconda::sra-tools"
+    container "${params.wf.container}:${params.wf.container_version}"
+
     storeDir "${params.dataset_dir}/"
     input:
     tuple val(accession), val(platform)
