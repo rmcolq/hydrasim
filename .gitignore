@@ -39,3 +39,6 @@ plugins-prod
 sandbox
 wave-tests
 x/*
+output/*
+store/*
+
