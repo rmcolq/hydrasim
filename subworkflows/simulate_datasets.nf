@@ -1,6 +1,9 @@
 #!/usr/bin/env nextflow
 import java.nio.file.Paths
 
+include { generate_recipes } from '../subworkflows/generate_recipes'
+
+
 process downsample_dataset {
     input:
     tuple val(index), val(ref_accession), val(ref_category), path(ref_fasta), val(ref_coverage), val(dataset_accession), val(platform), path(dataset_fastq)
@@ -131,6 +134,7 @@ workflow simulate_datasets {
 
     main:
         generate_recipes()
+        
         generate_unpaired(generate_recipes.out.unpaired)
         generate_paired(generate_recipes.out.paired)
         generate_unpaired.out.view()

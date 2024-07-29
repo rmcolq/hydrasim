@@ -1,7 +1,7 @@
 include { ingest } from './subworkflows/ingest'
 
-include { simulate_datasets } from './subworkflows/simulate_datasets'
 include { generate_recipes } from './subworkflows/generate_recipes'
+include { simulate_datasets } from './subworkflows/simulate_datasets'
 
 process checkPath {    
     script:
@@ -33,9 +33,7 @@ workflow {
     }
 
     // Check input files and run 
-    ingest(unique_id)
-    generate_recipes()
-    // simulate_datasets(unique_id)
-
+    ingest(unique_id) 
+    simulate_datasets(unique_id)
 
 }

@@ -169,4 +169,5 @@ workflow generate_recipes {
      emit:
         paired = paired_recipes
         unpaired = unpaired_recipes
+    
 }
