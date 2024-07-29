@@ -1,0 +1,5 @@
+task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
+4	58/d42cf1	14714	generate_recipes:get_base_datasets:subset_dataset_accessions	COMPLETED	0	2024-07-29 13:39:00.150	235ms	91ms	38.5%	15.3 MB	43.4 MB	856 KB	1.1 KB
+3	ea/8a62ac	14717	generate_recipes:get_reference_fastas:subset_reference_accessions	COMPLETED	0	2024-07-29 13:39:00.169	236ms	85ms	47.6%	15.9 MB	43.9 MB	856 KB	1.1 KB
+2	38/e07933	14927	ingest:get_params_and_versions:get_params	COMPLETED	0	2024-07-29 13:39:00.408	407ms	23ms	16.0%	0	0	93.8 KB	1.4 KB
+1	aa/47b760	14940	ingest:get_params_and_versions:get_versions	COMPLETED	0	2024-07-29 13:39:00.443	1.5s	1.3s	72.7%	24.6 MB	56.9 MB	16.5 MB	9.6 KB

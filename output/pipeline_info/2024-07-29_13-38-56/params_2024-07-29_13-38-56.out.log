@@ -1,0 +1,50 @@
+{
+    "input": null,
+    "outdir": "output",
+    "reference_csv": "test/test_data/test_hcid_accessions.csv",
+    "dataset_csv": "test/test_data/test_datasets_for_hcid_and_respiratory.csv",
+    "tracedir": "output/pipeline_info/2024-07-29_13-38-56",
+    "publish_dir_mode": "copy",
+    "email": null,
+    "email_on_fail": null,
+    "plaintext_email": false,
+    "monochrome_logs": false,
+    "hook_url": null,
+    "help": false,
+    "version": false,
+    "validate_params": true,
+    "show_hidden_params": false,
+    "max_memory": "10.GB",
+    "max_cpus": 4,
+    "max_time": "240.h",
+    "store_dir": "store_dir",
+    "unique_id": null,
+    "timestamp": "2024-07-29_13-38-56",
+    "dataset_coverage": "10k",
+    "lookup": {
+        "illumina": "wgsim",
+        "ont": "badread"
+    },
+    "output_dir": "output",
+    "reference_dir": "store/references",
+    "dataset_index": "public_database_accession",
+    "dataset_dir": "store/datasets",
+    "read_types": [
+        "illumina",
+        "ont"
+    ],
+    "coverages": [
+        0.1,
+        1,
+        10,
+        100
+    ],
+    "num_iterations": 1,
+    "paired": null,
+    "unpaired": null,
+    "wf": {
+        "agent": null,
+        "container": "nfellaby/hydrasim",
+        "container_version": "0.1"
+    }
+}
