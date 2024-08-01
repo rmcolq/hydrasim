@@ -20,12 +20,12 @@ workflow {
 
     // Check input files
     if (params.reference_csv) {
-        reference_csv = params.reference_csv
+        reference_csv = path(params.reference_csv, type: "file", checkIfExists:true)
     } else {
         exit 1, "Reference CSV be provided -- aborting"
     }
     if (params.dataset_csv) {
-        dataset_csv = params.dataset_csv
+        dataset_csv = path(params.dataset_csv, type: "file", checkIfExists:true)
     } else {
         exit 1, "Dataset CSV be provided -- aborting"
     }
