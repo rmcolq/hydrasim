@@ -32,6 +32,6 @@ workflow {
     println params.reference_csv
     
 
-    // simulate_datasets()
+    simulate_datasets()
 
 }
