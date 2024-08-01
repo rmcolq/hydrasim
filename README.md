@@ -16,5 +16,5 @@ Also note that in places maxForks has been used where having more than 1 fork le
 ## Test Run
 To Run with test dataset on Bryn platform (from the repo directory):
 ```
-nextflow run nfellaby/hydrasim -r dev --reference_csv test/test_data/test_hcid_accessions.csv --dataset_csv test/test_data/test_datasets_for_hcid_and_respiratory.csv -profile docker
+nextflow run nfellaby/hydrasim -r dev --reference_csv test/test_data/test_hcid_accessions.csv --dataset_csv test/test_data/test_datasets_for_hcid_and_respiratory.csv -profile test,docker
 ```
