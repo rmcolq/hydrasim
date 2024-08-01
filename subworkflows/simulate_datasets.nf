@@ -145,6 +145,8 @@ workflow simulate_datasets {
         unique_id
 
     main:
+        run_dir = file("${params.run_dir}", type: "dir", checkIfExists:true)
+
         generate_recipes()
         
         generate_unpaired(generate_recipes.out.unpaired)
