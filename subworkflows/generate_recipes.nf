@@ -54,9 +54,17 @@ process download_reference_fasta {
     script:
     """
     datasets download genome accession ${accession}
-    sleep 10
+    until [ -f ncbi_dataset.zip ]
+    do
+        sleep 10
+    done
+
     unzip -o ncbi_dataset.zip
-    sleep 5
+    until [ -d ncbi_dataset ]
+    do
+        sleep 5
+    done
+    
     mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
     """
 }
