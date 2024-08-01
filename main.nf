@@ -14,11 +14,11 @@ process checkPath {
 workflow {
     unique_id = "${params.unique_id}"
 
-    // Set Unique ID
-    if (unique_id == "null") {
-        unique_id = "${params.timestamp}.out"
-    }
-    println "Unique ID: ${unique_id}"
+    // // Set Unique ID
+    // if (unique_id == "null") {
+    //     unique_id = "${params.timestamp}.out"
+    // }
+    // println "Unique ID: ${unique_id}"
 
     // Check input files
     if (params.reference_csv) {
