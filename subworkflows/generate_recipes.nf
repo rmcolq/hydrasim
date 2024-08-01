@@ -5,7 +5,7 @@ nextflow.enable.dsl=2
 process subset_reference_accessions {
     label "process_low"
 
-    container 'biocontainers/python:3.12'
+    container 'biocontainers/python:3.10.4'
 
     input:
     path reference_csv
@@ -23,7 +23,7 @@ process subset_reference_accessions {
 process subset_dataset_accessions {
     label "process_low"
 
-    container 'biocontainers/python:3.12'
+    container 'biocontainers/python:3.10.4'
 
     input:
     path dataset_csv
