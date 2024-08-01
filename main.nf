@@ -1,5 +1,3 @@
-include { ingest } from './subworkflows/ingest'
-
 include { generate_recipes } from './subworkflows/generate_recipes'
 include { simulate_datasets } from './subworkflows/simulate_datasets'
 
