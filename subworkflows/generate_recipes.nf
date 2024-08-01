@@ -16,7 +16,7 @@ process subset_reference_accessions {
 
     script:
     """
-    subset_accessions.py ${reference_csv} "references.csv" category_id ${sample_size} 
+    subset_accessions.py ${params.reference_csv} "references.csv" category_id ${sample_size} 
     """
 }
 
@@ -34,7 +34,7 @@ process subset_dataset_accessions {
 
     script:
     """
-    subset_accessions.py ${dataset_csv} "dataset.csv" platform ${sample_size} 
+    subset_accessions.py ${params.dataset_csv} "dataset.csv" platform ${sample_size} 
     """
 }
 
