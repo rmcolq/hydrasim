@@ -5,6 +5,9 @@ include { generate_recipes } from '../subworkflows/generate_recipes'
 
 
 process downsample_dataset {
+
+    container 'biocontainers/rasusa:2.0.0--h715e4b3_2'
+
     input:
     tuple val(index), val(ref_accession), val(ref_category), path(ref_fasta), val(ref_coverage), val(dataset_accession), val(platform), path(dataset_fastq)
     val(dataset_coverage)
@@ -19,6 +22,9 @@ process downsample_dataset {
 }
 
 process downsample_dataset_paired {
+
+    container 'biocontainers/rasusa:2.0.0--h715e4b3_2'
+
     input:
     tuple val(index), val(ref_accession), val(ref_category), path(ref_fasta), val(ref_coverage), val(dataset_accession), val(platform), path(dataset_fastq1), path(dataset_fastq2)
     val(dataset_coverage)
@@ -33,6 +39,9 @@ process downsample_dataset_paired {
 }
 
 process simulate_reads {
+
+    container 'biocontainers/badread:0.4.1--pyhdfd78af_0'
+
     input:
     tuple val(index), val(ref_accession), val(ref_category), path(ref_fasta), val(ref_coverage), val(dataset_accession), val(platform), path(dataset_fastq)
 
@@ -52,6 +61,9 @@ process simulate_reads {
 }
 
 process simulate_reads_paired {
+
+    container 'biocontainers/wgsim:1.0--0'
+
     input:
     tuple val(index), val(ref_accession), val(ref_category), path(ref_fasta), val(ref_coverage), val(dataset_accession), val(platform), path(dataset_fastq1), path(dataset_fastq2)
     output:

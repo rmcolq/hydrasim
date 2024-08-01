@@ -5,8 +5,6 @@ nextflow.enable.dsl=2
 process subset_reference_accessions {
     label "process_low"
 
-    container "${params.wf.container}:${params.wf.container_version}"
-
     input:
     path reference_csv
     val sample_size
@@ -22,8 +20,6 @@ process subset_reference_accessions {
 
 process subset_dataset_accessions {
     label "process_low"
-
-    container "${params.wf.container}:${params.wf.container_version}"
 
     input:
     path dataset_csv
