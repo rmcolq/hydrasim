@@ -31,7 +31,6 @@ workflow {
     }
 
     // Check input files and run 
-    ingest(unique_id) 
     simulate_datasets(unique_id)
 
 }
