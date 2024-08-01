@@ -30,7 +30,9 @@ workflow {
         exit 1, "Dataset CSV be provided -- aborting"
     }
 
+    println reference_csv
+    println dataset_csv
     // Check input files and run 
-    simulate_datasets(unique_id)
+    // simulate_datasets(unique_id)
 
 }
