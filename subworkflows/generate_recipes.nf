@@ -5,6 +5,8 @@ nextflow.enable.dsl=2
 process subset_reference_accessions {
     label "process_low"
 
+    container 'biocontainers/python:3.12'
+
     input:
     path reference_csv
     val sample_size
@@ -20,6 +22,8 @@ process subset_reference_accessions {
 
 process subset_dataset_accessions {
     label "process_low"
+
+    container 'biocontainers/python:3.12'
 
     input:
     path dataset_csv
@@ -37,8 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     
-    conda "ncbi-datasets-pylib:16.6.1--pyhdfd78af_0"
-    container "${params.wf.container}:${params.wf.container_version}"
+    container "biocontainers/ncbi-datasets-pylib:16.6.1--pyhdfd78af_0"
 
     storeDir "${params.reference_dir}/${category}"
 
