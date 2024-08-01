@@ -41,7 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     
-    container "biocontainers/ncbi-datasets-pylib:16.6.1--pyhdfd78af_0"
+    container "biocontainers/ncbi-datasets-cli:14.26.0"
 
     storeDir "${params.reference_dir}/${category}"
 
