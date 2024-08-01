@@ -4,12 +4,12 @@ import csv
 import random
 import argparse
 from collections import defaultdict
-import urllib2
+import urllib3
 
 def select_random_rows(input_csv, output_csv, category_column, sample_size):
     # check  if input_csv is URL (from testing profile)
     if input_csv.startswith('https://'):
-        input_csv = urllib2.urlopen(input_csv)
+        input_csv = urllib3.urlopen(input_csv)
     # Read the CSV file
     grouped_data = defaultdict(list)
     with open(input_csv, mode='r') as infile:
