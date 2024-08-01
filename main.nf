@@ -28,6 +28,7 @@ workflow {
     }
     println reference_csv
     println dataset_csv
+    println '$projectDir'
 
     simulate_datasets()
 
