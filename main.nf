@@ -1,5 +1,7 @@
 #!/usr/bin/env nextflow
 
+nextflow.enable.dsl=2
+
 include { generate_recipes } from './subworkflows/generate_recipes'
 include { simulate_datasets } from './subworkflows/simulate_datasets'
 
