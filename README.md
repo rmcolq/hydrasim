@@ -12,3 +12,9 @@ The output directory will be populated with folders labelled by `category_id`. W
 Expected behaviour:
 Note that this pipeline makes use of a store directory, where datasets and reference fasta are stored so they can be called on several times without needing to download again
 Also note that in places maxForks has been used where having more than 1 fork led to errors either due to clashes over reading a file by rasusa, or errors when downloading if too many simultaneous calls.
+
+## Test Run
+To Run with test dataset on Bryn platform (from the repo directory):
+```
+nextflow run nfellaby/hydrasim -r dev --reference_csv test/test_data/test_hcid_accessions.csv --dataset_csv test/test_data/test_datasets_for_hcid_and_respiratory.csv -profile docker
+```
