@@ -141,8 +141,6 @@ workflow generate_paired {
 }
 
 workflow simulate_datasets {
-    take:
-        unique_id
 
     main:
 
