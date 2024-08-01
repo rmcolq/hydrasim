@@ -29,6 +29,6 @@ workflow {
     println reference_csv
     println dataset_csv
 
-    // simulate_datasets()
+    simulate_datasets()
 
 }
