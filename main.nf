@@ -1,5 +1,5 @@
-// include { generate_recipes } from './subworkflows/generate_recipes'
-// include { simulate_datasets } from './subworkflows/simulate_datasets'
+include { generate_recipes } from './subworkflows/generate_recipes'
+include { simulate_datasets } from './subworkflows/simulate_datasets'
 
 process checkPath {    
     script:
@@ -20,12 +20,12 @@ workflow {
 
     // Check input files
     if (params.reference_csv) {
-        reference_csv = path(params.reference_csv, type: "file", checkIfExists:true)
+        reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
     } else {
         exit 1, "Reference CSV be provided -- aborting"
     }
     if (params.dataset_csv) {
-        dataset_csv = path(params.dataset_csv, type: "file", checkIfExists:true)
+        dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
     } else {
         exit 1, "Dataset CSV be provided -- aborting"
     }

@@ -147,7 +147,7 @@ workflow simulate_datasets {
     main:
 
         generate_recipes()
-        
+        file
         generate_unpaired(generate_recipes.out.unpaired)
         generate_paired(generate_recipes.out.paired)
         generate_unpaired.out.view()
