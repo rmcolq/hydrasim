@@ -26,7 +26,9 @@ workflow {
     } else {
         exit 1, "Dataset CSV be provided -- aborting"
     }
+    println reference_csv
+    println dataset_csv
 
-    simulate_datasets()
+    // simulate_datasets()
 
 }
