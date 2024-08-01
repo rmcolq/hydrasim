@@ -26,9 +26,11 @@ workflow {
     } else {
         exit 1, "Dataset CSV be provided -- aborting"
     }
-    println reference_csv
-    println dataset_csv
+
     println "${projectDir}"
+    println params.reference_csv
+    println params.reference_csv
+    
 
     // simulate_datasets()
 
