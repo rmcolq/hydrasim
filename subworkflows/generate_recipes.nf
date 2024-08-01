@@ -65,7 +65,6 @@ process download_dataset_accession {
     label "process_low"
 
     conda "biocontainers/sra-tools:2.7.0--0"
-    container "${params.wf.container}:${params.wf.container_version}"
 
     storeDir "${params.dataset_dir}/"
     input:
@@ -85,7 +84,6 @@ process download_dataset_accession_paired {
     label "process_low"
     
     conda "biocontainers/sra-tools:2.7.0--0"
-    container "${params.wf.container}:${params.wf.container_version}"
 
     storeDir "${params.dataset_dir}/"
     input:
