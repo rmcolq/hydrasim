@@ -57,15 +57,14 @@ process download_reference_fasta {
     """
     echo "Accession ID for Reference: ${accession}."
 
-    
-    # download_accessions.py ${accession}
+    download_accessions.py ${accession}
 
-    datasets download genome accession ${accession}
+    # datasets download genome accession ${accession}
     
-    until [ -f ncbi_dataset.zip ]
-    do
-        sleep 10
-    done
+    # until [ -f ncbi_dataset.zip ]
+    # do
+    #     sleep 10
+    # done
 
     # unzip -o ncbi_dataset.zip
     
@@ -74,8 +73,8 @@ process download_reference_fasta {
     #     sleep 5
     # done
     
-    cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
-    sleep 30
+    # cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
+    # sleep 30
     #  mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
     """
 }
