@@ -40,12 +40,18 @@ process subset_dataset_accessions {
 
 process download_reference_fasta {
     label "process_low"
-    errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
+    // errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
 
-    maxForks 1
+    // # Use the efetch utility to retrieve the sequence record in FASTA format
+    // fasta_handle = Entrez.efetch(
+    //     db="nucleotide", id=gi, rettype="fasta", retmode="text"
+    // )
+
+
+    // maxForks 1
 
     // try ncbi-acc-download instead
-    container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip:ec913708564558ae"
+    container "community.wave.seqera.io/library/pip_easy-entrez:371878ab8c0eb7c4"
 
     storeDir "${params.reference_dir}/${category}"
 
@@ -59,19 +65,22 @@ process download_reference_fasta {
     """
     echo "Accession ID for Reference: ${accession}."
 
-    datasets download genome accession ${accession}
     
-    until [ -f ncbi_dataset.zip ]
-    do
-        sleep 10
-    done
+    download_accessions.py ${accession}
 
-    unzip -o ncbi_dataset.zip
+    # datasets download genome accession ${accession}
     
-    // until [ -f ncbi_dataset/data/*/*_genomic.fna ]
-    // do
-    //     sleep 5
-    // done
+    # until [ -f ncbi_dataset.zip ]
+    # do
+        # sleep 10
+    # done
+
+    # unzip -o ncbi_dataset.zip
+    
+    # until [ -f ncbi_dataset/data/*/*_genomic.fna ]
+    # do
+    #     sleep 5
+    # done
     
     cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
     sleep 30
