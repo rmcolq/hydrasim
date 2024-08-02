@@ -41,7 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     
-    container "community.wave.seqera.io/library/pip_ncbi-datasets-pylib_unzip:58360ff7ed7094e2"
+    container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip:ec913708564558ae"
 
     storeDir "${params.reference_dir}/${category}"
 
