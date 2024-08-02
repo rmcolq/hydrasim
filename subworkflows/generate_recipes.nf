@@ -51,7 +51,7 @@ process download_reference_fasta {
     // maxForks 1
 
     // try ncbi-acc-download instead
-    container "community.wave.seqera.io/library/pip_biopython:e7db9733bebc01ab"
+    container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
 
     storeDir "${params.reference_dir}/${category}"
 
