@@ -41,8 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     
-    // conda 'ncbi-datasets-cli'
-    container "community.wave.seqera.io/library/ncbi-datasets-cli:16.15.0--6c49c04c000aaf10"
+    container "community.wave.seqera.io/library/pip_ncbi-datasets-pylib_unzip:58360ff7ed7094e2"
 
     storeDir "${params.reference_dir}/${category}"
 
@@ -64,6 +63,7 @@ process download_reference_fasta {
     done
 
     unzip -o ncbi_dataset.zip
+    
     until [ -d ncbi_dataset ]
     do
         sleep 5
