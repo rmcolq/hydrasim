@@ -40,15 +40,7 @@ process subset_dataset_accessions {
 
 process download_reference_fasta {
     label "process_low"
-    // errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
-
-    // # Use the efetch utility to retrieve the sequence record in FASTA format
-    // fasta_handle = Entrez.efetch(
-    //     db="nucleotide", id=gi, rettype="fasta", retmode="text"
-    // )
-
-
-    // maxForks 1
+    errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
 
     // try ncbi-acc-download instead
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
@@ -66,14 +58,14 @@ process download_reference_fasta {
     echo "Accession ID for Reference: ${accession}."
 
     
-    download_accessions.py ${accession}
+    # download_accessions.py ${accession}
 
-    # datasets download genome accession ${accession}
+    datasets download genome accession ${accession}
     
-    # until [ -f ncbi_dataset.zip ]
-    # do
-        # sleep 10
-    # done
+    until [ -f ncbi_dataset.zip ]
+    do
+        sleep 10
+    done
 
     # unzip -o ncbi_dataset.zip
     
