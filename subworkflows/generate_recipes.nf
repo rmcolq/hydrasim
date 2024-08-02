@@ -53,19 +53,21 @@ process download_reference_fasta {
 
     script:
     """
+    echo ${accession}
+
     datasets download genome accession ${accession}
     until [ -f ncbi_dataset.zip ]
     do
         sleep 10
     done
 
-    unzip -o ncbi_dataset.zip
-    until [ -d ncbi_dataset ]
-    do
-        sleep 5
-    done
+    # unzip -o ncbi_dataset.zip
+    # until [ -d ncbi_dataset ]
+    # do
+    #     sleep 5
+    # done
     
-    mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
+    # mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
     """
 }
 
@@ -180,16 +182,16 @@ workflow get_base_datasets {
 workflow generate_recipes {
     main:
         get_reference_fastas()
-        coverages = channel.from(params.coverages)
-        get_reference_fastas.out.combine(coverages).set{ references }
+    //     coverages = channel.from(params.coverages)
+    //     get_reference_fastas.out.combine(coverages).set{ references }
 
-        get_base_datasets()
-        references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
-        references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
-        paired_recipes.view()
-        unpaired_recipes.view()
-     emit:
-        paired = paired_recipes
-        unpaired = unpaired_recipes
+    //     get_base_datasets()
+    //     references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
+    //     references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
+    //     paired_recipes.view()
+    //     unpaired_recipes.view()
+    //  emit:
+    //     paired = paired_recipes
+    //     unpaired = unpaired_recipes
     
 }
