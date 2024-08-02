@@ -57,7 +57,7 @@ process download_reference_fasta {
     """
     echo "Accession ID for Reference: ${accession}."
 
-    download_accessions.py ${accession}
+    download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
 
     # datasets download genome accession ${accession}
     
