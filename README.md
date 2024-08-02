@@ -18,3 +18,8 @@ To Run with test dataset on Bryn platform (from the repo directory):
 ```
 nextflow run nfellaby/hydrasim -r dev --reference_csv test/test_data/test_hcid_accessions.csv --dataset_csv test/test_data/test_datasets_for_hcid_and_respiratory.csv -profile test,docker
 ```
+
+## Running Dev Branch
+```
+nextflow run nfellaby/hydrasim -r dev -latest  -profile test,docker
+```
