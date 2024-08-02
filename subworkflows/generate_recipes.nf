@@ -48,8 +48,8 @@ process download_reference_fasta {
     input:
     tuple val(accession), val(category)
 
-    # output:
-    # tuple val(accession), val(category), path("${accession}_genomic.fna")
+    // output:
+    // tuple val(accession), val(category), path("${accession}_genomic.fna")
 
     script:
     """
