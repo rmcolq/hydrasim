@@ -41,8 +41,8 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     
-    conda 'ncbi-datasets-cli'
-    // container "biocontainers/ncbi-datasets-cli:13.14.0"
+    // conda 'ncbi-datasets-cli'
+    container "community.wave.seqera.io/library/ncbi-datasets-cli:16.15.0--6c49c04c000aaf10"
 
     storeDir "${params.reference_dir}/${category}"
 
