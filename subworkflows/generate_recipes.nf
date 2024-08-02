@@ -50,8 +50,8 @@ process download_reference_fasta {
     input:
     tuple val(accession), val(category)
 
-    output:
-    tuple val(accession), val(category), path("${accession}_genomic.fna")
+    // output:
+    // tuple val(accession), val(category), path("${accession}_genomic.fna")
 
     script:
     """
@@ -162,8 +162,8 @@ workflow get_reference_fastas {
         reference_accessions.tap{ to_download }
         download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
         // reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
-    emit:
-       downloaded
+    // emit:
+    //   downloaded
 }
 
 workflow get_base_datasets {
