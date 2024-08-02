@@ -5,7 +5,9 @@ import sys
 
 def download_fasta(accession, email):
     Entrez.email = email  # Always tell NCBI who you are
-    # handle = Entrez.efetch(db="nucleotide", id=accession, rettype="fasta", retmode="text")
+    print(Entrez.email)
+    handle = Entrez.efetch(db="nucleotide", id=accession, rettype="fasta", retmode="text")
+    print(handle)
     # fasta_record = handle.read()
     # handle.close()
 
