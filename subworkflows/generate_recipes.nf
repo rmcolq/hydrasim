@@ -55,7 +55,9 @@ process download_reference_fasta {
     """
     echo ${accession}
 
-    datasets download genome accession ${accession}
+    # datasets download genome accession ${accession}
+    datasets download genome accession GCA_000864885.1
+
     until [ -f ncbi_dataset.zip ]
     do
         sleep 10
