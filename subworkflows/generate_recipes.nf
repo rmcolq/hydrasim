@@ -41,7 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     
-    container "biocontainers/ncbi-datasets-cli:14.26.0"
+    container "biocontainers/ncbi-datasets-cli:13.14.0"
 
     storeDir "${params.reference_dir}/${category}"
 
@@ -53,7 +53,7 @@ process download_reference_fasta {
 
     script:
     """
-    echo "Accession ID for Reference:${accession}."
+    echo "Accession ID for Reference: ${accession}."
 
     datasets download genome accession ${accession}
     # datasets download genome accession GCA_000864885.1
