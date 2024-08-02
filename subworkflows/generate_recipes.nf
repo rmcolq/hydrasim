@@ -71,7 +71,7 @@ process download_reference_fasta {
     do
         sleep 5
     done
-    
+    sleep 10
     cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
 
     #  mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
