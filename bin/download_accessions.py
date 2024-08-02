@@ -4,6 +4,8 @@
 from Bio import Entrez
 import sys
 
+Entrez.email = 'nfellaby@gmail.com'
+
 fasta_handle = Entrez.efetch(
         db="nucleotide", id=sys.argv[1], rettype="fasta", retmode="text"
     )
