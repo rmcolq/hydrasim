@@ -44,6 +44,7 @@ process download_reference_fasta {
 
     maxForks 1
 
+    // try ncbi-acc-download instead
     container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip:ec913708564558ae"
 
     storeDir "${params.reference_dir}/${category}"
@@ -60,20 +61,18 @@ process download_reference_fasta {
 
     datasets download genome accession ${accession}
     
-    until [ -f ncbi_dataset.zip ]
-    do
-        sleep 10
-    done
+    // until [ -f ncbi_dataset.zip ]
+    // do
+    //     sleep 10
+    // done
 
     unzip -o ncbi_dataset.zip
     
-    until [ -f ncbi_dataset/data/*/*_genomic.fna ]
-    do
-        sleep 5
-    done
+    // until [ -f ncbi_dataset/data/*/*_genomic.fna ]
+    // do
+    //     sleep 5
+    // done
     
-    # sleep 10
-    # until [-f ]
     cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
     sleep 30
     #  mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
