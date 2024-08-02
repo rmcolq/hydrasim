@@ -41,7 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
     errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
-    
+
     container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip:ec913708564558ae"
 
     storeDir "${params.reference_dir}/${category}"
@@ -65,7 +65,7 @@ process download_reference_fasta {
 
     unzip -o ncbi_dataset.zip
     
-    until [ -d ncbi_dataset ]
+    until [ -f ncbi_dataset/data/*/*_genomic.fn ]
     do
         sleep 5
     done
