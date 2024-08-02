@@ -49,28 +49,27 @@ process download_reference_fasta {
     input:
     tuple val(accession), val(category)
 
-    // output:
-    // tuple val(accession), val(category), path("${accession}_genomic.fna")
+    output:
+    tuple val(accession), val(category), path("${accession}_genomic.fna")
 
     script:
     """
     echo "Accession ID for Reference: ${accession}."
 
     datasets download genome accession ${accession}
-    # datasets download genome accession GCA_000864885.1
-
-    # until [ -f ncbi_dataset.zip ]
-    # do
-    #     sleep 10
-    # done
-
-    # unzip -o ncbi_dataset.zip
-    # until [ -d ncbi_dataset ]
-    # do
-    #     sleep 5
-    # done
     
-    # mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
+    until [ -f ncbi_dataset.zip ]
+    do
+        sleep 10
+    done
+
+    unzip -o ncbi_dataset.zip
+    until [ -d ncbi_dataset ]
+    do
+        sleep 5
+    done
+    
+    mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
     """
 }
 
@@ -156,9 +155,9 @@ workflow get_reference_fastas {
 
         reference_accessions.tap{ to_download }
         download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
-        // reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
-    // emit:
-    //    downloaded
+        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
+    emit:
+       downloaded
 }
 
 workflow get_base_datasets {
