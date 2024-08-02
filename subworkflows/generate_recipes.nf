@@ -61,10 +61,10 @@ process download_reference_fasta {
 
     datasets download genome accession ${accession}
     
-    // until [ -f ncbi_dataset.zip ]
-    // do
-    //     sleep 10
-    // done
+    until [ -f ncbi_dataset.zip ]
+    do
+        sleep 10
+    done
 
     unzip -o ncbi_dataset.zip
     
