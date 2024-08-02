@@ -40,6 +40,7 @@ process subset_dataset_accessions {
 
 process download_reference_fasta {
     label "process_low"
+    errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
     
     container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip:ec913708564558ae"
 
