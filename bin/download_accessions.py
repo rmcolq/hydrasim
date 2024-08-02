@@ -5,20 +5,20 @@ import sys
 
 def download_fasta(accession, email):
     Entrez.email = email  # Always tell NCBI who you are
-    handle = Entrez.efetch(db="nucleotide", id=accession, rettype="fasta", retmode="text")
-    fasta_record = handle.read()
-    handle.close()
+    # handle = Entrez.efetch(db="nucleotide", id=accession, rettype="fasta", retmode="text")
+    # fasta_record = handle.read()
+    # handle.close()
 
-    # Save the FASTA record to a file
-    with open(f"{accession}.fasta", "w") as file:
-        file.write(fasta_record)
+    # # Save the FASTA record to a file
+    # with open(f"{accession}.fasta", "w") as file:
+    #     file.write(fasta_record)
 
-    print(f"FASTA file for accession {accession} has been saved as {accession}.fasta")
+    # print(f"FASTA file for accession {accession} has been saved as {accession}.fasta")
 
 # Example usage
 print(sys.argv[1])
 print(sys.argv[2])
-# download_fasta(sys.argv[1], sys.argv[2])
+download_fasta(sys.argv[1], sys.argv[2])
 
 
 # from Bio import Entrez
