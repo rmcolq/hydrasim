@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-import Entrez
+from Bio import Entrez
 import sys
 
 fasta_handle = Entrez.efetch(
