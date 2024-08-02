@@ -53,7 +53,7 @@ process download_reference_fasta {
 
     script:
     """
-    echo "Accession ID for Reference: ${accession}."
+    echo "Accession ID for Reference:${accession}."
 
     datasets download genome accession ${accession}
     # datasets download genome accession GCA_000864885.1
