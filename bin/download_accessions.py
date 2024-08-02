@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from Bio import Entrez, SeqIO
+import sys
 
 def download_fasta(accession, email):
     Entrez.email = email  # Always tell NCBI who you are
