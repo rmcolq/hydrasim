@@ -16,7 +16,9 @@ def download_fasta(accession, email):
     print(f"FASTA file for accession {accession} has been saved as {accession}.fasta")
 
 # Example usage
-download_fasta(sys.argv[1], sys.argv[2])
+print(sys.argv[1])
+print(sys.argv[2])
+# download_fasta(sys.argv[1], sys.argv[2])
 
 
 # from Bio import Entrez

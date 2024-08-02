@@ -161,7 +161,7 @@ workflow get_reference_fastas {
 
         reference_accessions.tap{ to_download }
         download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
-        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
+        // reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
     emit:
        downloaded
 }
