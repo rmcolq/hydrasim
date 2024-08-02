@@ -7,7 +7,7 @@ import sys
 Entrez.email = 'nfellaby@gmail.com'
 
 fasta_handle = Entrez.efetch(
-        db="nucleotide", id=str(sys.argv[1]), rettype="fasta", retmode="text"
+        db="nucleotide", id=str('"')+str(sys.argv[1])+str('"'), rettype="fasta", retmode="text"
     )
 
 with open(f"{sys.argv[1]}_genomic.fna", "wt") as fh:
