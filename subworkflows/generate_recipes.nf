@@ -42,6 +42,8 @@ process download_reference_fasta {
     label "process_low"
     errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
 
+    maxForks 1
+
     container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip:ec913708564558ae"
 
     storeDir "${params.reference_dir}/${category}"
@@ -71,10 +73,7 @@ process download_reference_fasta {
     done
     
     cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
-    until [ -f ${accession}_genomic.fna]
-    do
-        sleep 5
-    done
+
     #  mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
     """
 }
