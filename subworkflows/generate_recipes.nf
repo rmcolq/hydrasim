@@ -65,7 +65,7 @@ process download_reference_fasta {
 
     unzip -o ncbi_dataset.zip
     
-    until [ -f ncbi_dataset/data/*/*_genomic.fn ]
+    until [ -f ncbi_dataset/data/*/*_genomic.fna ]
     do
         sleep 5
     done
