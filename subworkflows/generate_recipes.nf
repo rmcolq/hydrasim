@@ -40,7 +40,7 @@ process subset_dataset_accessions {
 
 process download_reference_fasta {
     label "process_low"
-    errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
+    // errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
 
     // try ncbi-acc-download instead
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
