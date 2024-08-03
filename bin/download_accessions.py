@@ -8,7 +8,10 @@ import time
 def download_fasta(accession, email):
     Entrez.email = email  # Always tell NCBI who you are
     try:
-        handle = Entrez.efetch(db="nucleotide", id=accession, rettype="fasta", retmode="text")
+
+        handle = Entrez.efetch(db='nuccore', id='NC_019843.3', format='fasta', rettype='fasta')
+            
+        handle = Entrez.efetch(db="assembly", id=accession, rettype="fasta", retmode="text")
         fasta_record = handle.read()
         handle.close()
 
@@ -34,20 +37,3 @@ if __name__ == "__main__":
         print("Usage: python download_accessions.py <accession> <email>")
     else:
         download_fasta(sys.argv[1], sys.argv[2])
-
-
-# from Bio import Entrez
-# import sys
-
-# Entrez.email = 'nfellaby@gmail.com'
-
-# # fasta_handle = Entrez.efetch(
-# #         db="nucleotide", id=str('"')+str(sys.argv[1])+str('"'), rettype="fasta", retmode="text"
-# #     )
-
-
-# handle = Entrez.efetch(db="nucleotide", id=sys.argv[1], rettype="fasta", retmode="text")
-
-# with open(f"{sys.argv[1]}_genomic.fna", "wt") as fh:
-#           for line in handle:
-#             fh.write(line)

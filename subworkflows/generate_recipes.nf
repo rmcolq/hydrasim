@@ -48,35 +48,52 @@ process download_reference_fasta {
     storeDir "${params.reference_dir}/${category}"
 
     input:
-    tuple val(accession), val(category)
+    tuple val(genbank), val(refseq) val(category)
 
     // output:
     // tuple val(accession), val(category), path("${accession}_genomic.fna")
 
-    script:
-    """
-    echo "Accession ID for Reference: ${accession}."
+    // If refseq is populated use refseq
+    if (refseq) {
+        script:
+        """
+        download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
+        """
 
-    download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
+    } else {
+        script:
+        """
+        download_accessions.py ${genbank} "nicholas.ellaby@ukhsa.gov.uk"
+        """
 
-    # datasets download genome accession ${accession}
-    
-    # until [ -f ncbi_dataset.zip ]
-    # do
-    #     sleep 10
-    # done
+    }
 
-    # unzip -o ncbi_dataset.zip
+    // Else use genbank
+
+    // script:
+    // """
+    // echo "Accession ID for Reference: ${accession}."
+
+    // download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
+
+    // # datasets download genome accession ${accession}
     
-    # until [ -f ncbi_dataset/data/*/*_genomic.fna ]
-    # do
-    #     sleep 5
-    # done
+    // # until [ -f ncbi_dataset.zip ]
+    // # do
+    // #     sleep 10
+    // # done
+
+    // # unzip -o ncbi_dataset.zip
     
-    # cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
-    # sleep 30
-    #  mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
-    """
+    // # until [ -f ncbi_dataset/data/*/*_genomic.fna ]
+    // # do
+    // #     sleep 5
+    // # done
+    
+    // # cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
+    // # sleep 30
+    // #  mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
+    // """
 }
 
 process download_dataset_accession {
@@ -157,10 +174,10 @@ workflow get_reference_fastas {
     main:
         reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
         subset_reference_accessions(reference_csv, params.num_iterations)
-        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
+        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.genbank}","${row.refseq}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
         reference_accessions.tap{ to_download }
-        download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
+        download_reference_fasta(to_download.map{ accession, category, index -> [genbank, refseq, category] }.unique())
         // reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
     // emit:
     //   downloaded
