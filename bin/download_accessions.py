@@ -9,9 +9,9 @@ def download_fasta(accession, email):
     Entrez.email = email  # Always tell NCBI who you are
     try:
 
-        handle = Entrez.efetch(db='nuccore', id='NC_019843.3', format='fasta', rettype='fasta')
+        # handle = Entrez.efetch(db='nuccore', id='NC_019843.3', format='fasta', rettype='fasta')
             
-        handle = Entrez.efetch(db="assembly", id=accession, rettype="fasta", retmode="text")
+        handle = Entrez.efetch(db="nuccore", id=accession, rettype="fasta", retmode="text")
         fasta_record = handle.read()
         handle.close()
 
