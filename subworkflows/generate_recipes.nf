@@ -48,7 +48,7 @@ process download_reference_fasta {
     storeDir "${params.reference_dir}/${category}"
 
     input:
-    tuple val(genbank), val(refseq) val(category)
+    tuple val(genbank), val(refseq), val(category)
 
     script:
     """
