@@ -51,8 +51,8 @@ process download_reference_fasta {
     tuple val(genbank), val(refseq), val(category)
 
 
-    println ${genbank}
-    println ${refseq}
+    println "${genbank}"
+    println "${refseq}"
     script:
     """
     download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
