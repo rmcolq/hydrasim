@@ -52,7 +52,7 @@ process download_reference_fasta {
 
     script:
     """
-    download_accessions.py ${genbank} "nicholas.ellaby@ukhsa.gov.uk"
+    download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
     """
 
     // output:
