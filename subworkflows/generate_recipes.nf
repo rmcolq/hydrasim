@@ -50,23 +50,25 @@ process download_reference_fasta {
     input:
     tuple val(genbank), val(refseq) val(category)
 
+    script:
+    """
+    download_accessions.py ${genbank} "nicholas.ellaby@ukhsa.gov.uk"
+    """
+
     // output:
     // tuple val(accession), val(category), path("${accession}_genomic.fna")
 
     // If refseq is populated use refseq
-    if (refseq) {
-        script:
-        """
-        download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
-        """
+    // if (refseq) {
+    //     script:
+    //     """
+    //     download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
+    //     """
 
-    } else {
-        script:
-        """
-        download_accessions.py ${genbank} "nicholas.ellaby@ukhsa.gov.uk"
-        """
+    // } else {
 
-    }
+
+    // }
 
     // Else use genbank
 
@@ -176,8 +178,8 @@ workflow get_reference_fastas {
         subset_reference_accessions(reference_csv, params.num_iterations)
         subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.genbank}","${row.refseq}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
-        // reference_accessions.tap{ to_download }
-        // download_reference_fasta(to_download.map{ accession, category, index -> [genbank, refseq, category] }.unique())
+        reference_accessions.tap{ to_download }
+        download_reference_fasta(to_download.map{ accession, category, index -> [genbank, refseq, category] }.unique())
         // reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
     // emit:
     //   downloaded
