@@ -53,10 +53,10 @@ process download_reference_fasta {
 
     println ${genbank}
     println ${refseq}
-    // script:
-    // """
-    // download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
-    // """
+    script:
+    """
+    download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
+    """
 
     // output:
     // tuple val(accession), val(category), path("${accession}_genomic.fna")
