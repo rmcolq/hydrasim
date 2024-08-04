@@ -51,7 +51,7 @@ process download_reference_fasta {
 
 
     output:
-    tuple val(genbank), val(category), file("${genbank}.fasta")
+    tuple val(genbank), val(category), file("${genbank}_genomic.fna")
 
     
     script:
