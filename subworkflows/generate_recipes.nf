@@ -50,8 +50,8 @@ process download_reference_fasta {
     tuple val(genbank), val(category)
 
 
-    output:
-    tuple val(genbank), val(category), path("${genbank}.fasta")
+    // output:
+    // tuple val(genbank), val(category), path("${genbank}.fasta")
 
     
     script:
@@ -59,7 +59,7 @@ process download_reference_fasta {
 
     """
     download_accessions.py $genbank "nicholas.ellaby@ukhsa.gov.uk"
-    # mv ${genbank}.fasta ${genbank}_genomic.fna
+    mv ${genbank}.fasta ${genbank}_genomic.fna
     """
 
 }
