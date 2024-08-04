@@ -54,7 +54,7 @@ process download_reference_fasta {
     output:
     tuple val(accession), val(category)
 
-    println val(accession)
+    print val(accession)
 
     script:
     """
