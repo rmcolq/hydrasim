@@ -41,9 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     maxForks 1
     label "process_low"
-    // errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
 
-    // try ncbi-acc-download instead
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
 
     storeDir "${params.reference_dir}/${category}"
@@ -51,8 +49,9 @@ process download_reference_fasta {
     input:
     tuple val(genbank), val(category)
 
+
     output:
-    tuple val(genbank), val(category)
+    tuple val(genbank), val(category), path("${genbank}_genomic.fna")
 
     
     script:
@@ -60,49 +59,9 @@ process download_reference_fasta {
 
     """
     download_accessions.py $genbank "nicholas.ellaby@ukhsa.gov.uk"
+    mv ${genbank}.fasta ${genbank}_genomic.fna
     """
 
-    // output:
-    // tuple val(accession), val(category), path("${accession}_genomic.fna")
-
-    // If refseq is populated use refseq
-    // if (refseq) {
-    //     script:
-    //     """
-    //     download_accessions.py ${refseq} "nicholas.ellaby@ukhsa.gov.uk"
-    //     """
-
-    // } else {
-
-
-    // }
-
-    // Else use genbank
-
-    // script:
-    // """
-    // echo "Accession ID for Reference: ${accession}."
-
-    // download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
-
-    // # datasets download genome accession ${accession}
-    
-    // # until [ -f ncbi_dataset.zip ]
-    // # do
-    // #     sleep 10
-    // # done
-
-    // # unzip -o ncbi_dataset.zip
-    
-    // # until [ -f ncbi_dataset/data/*/*_genomic.fna ]
-    // # do
-    // #     sleep 5
-    // # done
-    
-    // # cp ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
-    // # sleep 30
-    // #  mv ncbi_dataset/data/*/*_genomic.fna ${accession}_genomic.fna
-    // """
 }
 
 process download_dataset_accession {
