@@ -39,6 +39,7 @@ process subset_dataset_accessions {
 }
 
 process download_reference_fasta {
+    maxForks 1
     label "process_low"
     // errorStrategy 'ignore' // Error relates to upgrading the version of NCBI datasets
 
@@ -46,12 +47,11 @@ process download_reference_fasta {
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
 
     storeDir "${params.reference_dir}/${category}"
-
+    
     input:
     tuple val(accession), val(category)
 
-
-    println "${accession}"
+    println "$accession"
 
     script:
     """
