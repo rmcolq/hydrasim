@@ -56,7 +56,7 @@ process download_reference_fasta {
 
     
     script:
-    println $accession)
+    println "${accession}"
 
     """
     echo "$accession"
