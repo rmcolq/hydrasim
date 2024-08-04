@@ -181,8 +181,8 @@ workflow get_reference_fastas {
         subset_reference_accessions(reference_csv, params.num_iterations)
         subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.genbank}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
-        subset_reference_accessions.out.splitCsv(header: true).view { row -> tuple("${row.genbank}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
-        // reference_accessions.tap{ to_download }
+        reference_accessions.tap{ to_download }
+        to_download.view{"$genbank"}
         // download_reference_fasta(to_download.map{ genbank, refseq, category, index -> [genbank, refseq, category] }.unique())
         // reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
     // emit:
