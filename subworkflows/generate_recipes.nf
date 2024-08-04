@@ -50,8 +50,8 @@ process download_reference_fasta {
     tuple val(genbank), val(category)
 
 
-    // output:
-    // tuple val(genbank), val(category), path("${genbank}.fasta")
+    output:
+    tuple val(genbank), val(category), file("${genbank}.fasta")
 
     
     script:
