@@ -179,11 +179,11 @@ workflow get_reference_fastas {
     main:
         reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
         subset_reference_accessions(reference_csv, params.num_iterations)
-                subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.genbank}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
+        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
         reference_accessions.tap{ to_download }
-        download_reference_fasta(to_download.map{ genbank, category, index -> [genbank, category] }.unique())
-        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ genbank, category, index, category1, fasta -> [index, genbank, category, fasta]}.set{downloaded}
+        download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
+        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
     // emit:
     //   downloaded
 }
