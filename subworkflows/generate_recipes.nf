@@ -48,14 +48,14 @@ process download_reference_fasta {
     storeDir "${params.reference_dir}/${category}"
 
     input:
-    tuple val(genbank), val(category)
+    tuple val(accession), val(category)
 
 
-    println "${genbank}"
+    println "${accession}"
 
     script:
     """
-    download_accessions.py ${genbank} "nicholas.ellaby@ukhsa.gov.uk"
+    download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
     """
 
     // output:
