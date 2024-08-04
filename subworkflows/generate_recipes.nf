@@ -39,7 +39,6 @@ process subset_dataset_accessions {
 }
 
 process download_reference_fasta {
-    maxForks 1
     label "process_low"
 
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
