@@ -54,10 +54,11 @@ process download_reference_fasta {
     output:
     tuple val(accession), val(category)
 
+    println val(accession)
 
     script:
     """
-    echo "${accession}"
+    echo "$accession"
     # download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
     """
 
