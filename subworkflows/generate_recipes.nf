@@ -57,7 +57,8 @@ process download_reference_fasta {
 
     script:
     """
-    download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
+    echo "${accession}"
+    # download_accessions.py ${accession} "nicholas.ellaby@ukhsa.gov.uk"
     """
 
     // output:
