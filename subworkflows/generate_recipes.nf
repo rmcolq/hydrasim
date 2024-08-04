@@ -51,7 +51,9 @@ process download_reference_fasta {
     input:
     tuple val(accession), val(category)
 
-    println "$accession"
+    output:
+    tuple val(accession), val(category)
+
 
     script:
     """
