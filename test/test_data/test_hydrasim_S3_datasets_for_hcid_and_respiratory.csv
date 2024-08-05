@@ -1,2 +1,3 @@
 climb_id,platform,study_id,public_database_accession,human_filtered_reads_1,human_filtered_reads_2
 C-E745C4D928,ont,PRJNA818777,SRX14580406,s3://mscape-published-read-fractions/C-E745C4D928/C-E745C4D928.human_filtered.fastq.gz,
+C-9F2BD50BDE,illumina,,SAMN15486885,s3://mscape-published-read-fractions/C-9F2BD50BDE/C-9F2BD50BDE.human_filtered_1.fastq.gz,s3://mscape-published-read-fractions/C-9F2BD50BDE/C-9F2BD50BDE.human_filtered_2.fastq.gz
