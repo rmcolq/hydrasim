@@ -160,7 +160,7 @@ workflow get_base_datasets {
             }.set { by_platform }
 
         get_base_fastq_paired(by_platform.paired)
-    //     get_base_fastq(by_platform.unpaired)
+        get_base_fastq(by_platform.unpaired)
 
     // emit:
     //     paired = get_base_fastq_paired.out
