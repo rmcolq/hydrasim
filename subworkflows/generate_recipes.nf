@@ -171,7 +171,7 @@ workflow get_base_datasets {
 workflow generate_recipes {
     main:
         get_reference_fastas()
-    //     coverages = channel.from(params.coverages)
+        coverages = channel.from(params.coverages)
     //     get_reference_fastas.out.combine(coverages).set{ references }
 
     //     get_base_datasets()
