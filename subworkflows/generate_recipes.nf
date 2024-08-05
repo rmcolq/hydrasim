@@ -51,7 +51,6 @@ process download_reference_fasta {
 
     
     script:
-    println "Genbank ID to download: ${genbank}"
 
     """
     download_accessions.py $genbank "nicholas.ellaby@ukhsa.gov.uk"
