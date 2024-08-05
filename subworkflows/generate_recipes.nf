@@ -172,7 +172,7 @@ workflow generate_recipes {
     main:
         get_reference_fastas()
         coverages = channel.from(params.coverages)
-    //     get_reference_fastas.out.combine(coverages).set{ references }
+        get_reference_fastas.out.combine(coverages).set{ references }
 
     //     get_base_datasets()
     //     references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
