@@ -39,7 +39,7 @@ process subset_dataset_accessions {
 }
 
 process download_reference_fasta {
-    label "process_single"
+    label "process_low"
 
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
 
@@ -61,7 +61,6 @@ process download_reference_fasta {
 }
 
 process download_dataset_accession {
-    label "process_low"
 
     container "biocontainers/sra-tools:2.7.0--0"
 
@@ -151,7 +150,7 @@ workflow get_base_datasets {
     main:
         dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
         subset_dataset_accessions(dataset_csv, params.num_iterations)
-    //     subset_dataset_accessions.out.splitCsv(header: true).map{row -> ["${row.public_database_accession}","${row.platform}","${row.index}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
+        subset_dataset_accessions.out.splitCsv(header: true).map{row -> ["${row.public_database_accession}","${row.platform}","${row.index}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
 
     //     dataset_accessions.branch { accession, platform, index, reads1, reads2 ->
     //         paired: platform == "illumina"
