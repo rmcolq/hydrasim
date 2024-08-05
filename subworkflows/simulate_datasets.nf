@@ -124,7 +124,7 @@ workflow generate_unpaired {
     main:
         downsample_dataset(recipes, params.dataset_coverage)
         simulate_reads(downsample_dataset.out)
-        // combine_for_recipe(simulate_reads.out)
+        combine_for_recipe(simulate_reads.out)
     emit:
         combine_for_recipe.out
 }
