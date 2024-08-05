@@ -159,7 +159,7 @@ workflow get_base_datasets {
                 return tuple(accession, platform, index, reads1)
             }.set { by_platform }
 
-    //     get_base_fastq_paired(by_platform.paired)
+        get_base_fastq_paired(by_platform.paired)
     //     get_base_fastq(by_platform.unpaired)
 
     // emit:
