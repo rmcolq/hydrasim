@@ -39,11 +39,11 @@ process subset_dataset_accessions {
 }
 
 process download_reference_fasta {
-    label "process_low"
+    label "process_single"
 
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
 
-    storeDir "${params.store_dir}/reference"
+    storeDir "${params.store_dir}/"
 
 
     input:
@@ -55,7 +55,7 @@ process download_reference_fasta {
 
 
     output:
-    tuple val(genbank), val(category), file("${genbank}_genomic.fna")
+    tuple val(genbank), val(category), path("${genbank}_genomic.fna")
 
     
     script:
