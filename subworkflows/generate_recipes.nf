@@ -162,9 +162,9 @@ workflow get_base_datasets {
         get_base_fastq_paired(by_platform.paired)
         get_base_fastq(by_platform.unpaired)
 
-    // emit:
-    //     paired = get_base_fastq_paired.out
-    //     unpaired = get_base_fastq.out
+    emit:
+        paired = get_base_fastq_paired.out
+        unpaired = get_base_fastq.out
 }
 
 workflow generate_recipes {
