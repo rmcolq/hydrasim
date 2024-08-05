@@ -152,12 +152,12 @@ workflow get_base_datasets {
         subset_dataset_accessions(dataset_csv, params.num_iterations)
         subset_dataset_accessions.out.splitCsv(header: true).map{row -> ["${row.public_database_accession}","${row.platform}","${row.index}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
 
-    //     dataset_accessions.branch { accession, platform, index, reads1, reads2 ->
-    //         paired: platform == "illumina"
-    //             return tuple(accession, platform, index, reads1, reads2)
-    //         unpaired: true
-    //             return tuple(accession, platform, index, reads1)
-    //         }.set { by_platform }
+        dataset_accessions.branch { accession, platform, index, reads1, reads2 ->
+            paired: platform == "illumina"
+                return tuple(accession, platform, index, reads1, reads2)
+            unpaired: true
+                return tuple(accession, platform, index, reads1)
+            }.set { by_platform }
 
     //     get_base_fastq_paired(by_platform.paired)
     //     get_base_fastq(by_platform.unpaired)
