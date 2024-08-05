@@ -43,11 +43,13 @@ process download_reference_fasta {
 
     container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
 
+    storeDir "${params.store_dir}/reference"
+
+
     input:
     tuple val(genbank), val(category)
 
-    // storeDir "${params.store_dir}/referemce/${category}"
-    storeDir "${params.reference_dir}/${category}"
+    // storeDir "${params.reference_dir}/${category}"
     
 
 
