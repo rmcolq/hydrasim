@@ -1,0 +1,122 @@
+<!--
+  ~ Copyright 2013-2024, Seqera Labs
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<html>
+<head>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+<pre class="mermaid" style="text-align: center;">
+flowchart TB
+    subgraph " "
+    v0["unique_id"]
+    v3["unique_id"]
+    v6["reference_csv"]
+    v7["sample_size"]
+    v18["Channel.from"]
+    v20["dataset_csv"]
+    v21["sample_size"]
+    v50["dataset_coverage"]
+    v54["dataset_coverage"]
+    end
+    subgraph ingest
+    subgraph get_params_and_versions
+    v1([get_versions])
+    v4([get_params])
+    end
+    end
+    subgraph " "
+    v2[" "]
+    v5[" "]
+    v12[" "]
+    v28[" "]
+    v37[" "]
+    v47[" "]
+    v49[" "]
+    v59[" "]
+    v61[" "]
+    end
+    subgraph simulate_datasets
+    subgraph generate_recipes
+    subgraph get_reference_fastas
+    v8([subset_reference_accessions])
+    v15([download_reference_fasta])
+    v9(( ))
+    end
+    subgraph get_base_datasets
+    v22([subset_dataset_accessions])
+    subgraph get_base_fastq_paired
+    v31([download_dataset_accession_paired])
+    end
+    subgraph get_base_fastq
+    v40([download_dataset_accession])
+    end
+    end
+    end
+    subgraph generate_unpaired
+    v51([downsample_dataset])
+    v52([simulate_reads])
+    v53([combine_for_recipe])
+    v58(( ))
+    end
+    subgraph generate_paired
+    v55([downsample_dataset_paired])
+    v56([simulate_reads_paired])
+    v57([combine_for_recipe_paired])
+    v60(( ))
+    end
+    end
+    v0 --> v1
+    v1 --> v2
+    v3 --> v4
+    v4 --> v5
+    v6 --> v8
+    v7 --> v8
+    v8 --> v9
+    v9 --> v12
+    v9 --> v15
+    v15 --> v9
+    v18 --> v9
+    v20 --> v22
+    v21 --> v22
+    v22 --> v9
+    v9 --> v28
+    v9 --> v31
+    v31 --> v9
+    v9 --> v37
+    v9 --> v40
+    v40 --> v9
+    v9 --> v47
+    v9 --> v49
+    v50 --> v51
+    v9 --> v51
+    v51 --> v52
+    v52 --> v53
+    v53 --> v58
+    v54 --> v55
+    v9 --> v55
+    v55 --> v56
+    v56 --> v57
+    v57 --> v60
+    v58 --> v59
+    v60 --> v61
+
+</pre>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true });
+</script>
+</body>
+</html>
