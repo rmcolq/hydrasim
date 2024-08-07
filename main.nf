@@ -29,7 +29,7 @@ workflow {
 
     println "${projectDir}"
     println params.reference_csv
-    println params.dataset_csv
+    // println params.dataset_csv
     
 
     simulate_datasets()
