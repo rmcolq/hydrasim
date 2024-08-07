@@ -86,6 +86,10 @@ process simulate_reads_paired {
 }
 
 process combine_for_recipe {
+
+    container 'biocontainers/wgsim:1.0--0'
+
+
     publishDir "${params.output_dir}/${ref_category}", mode: "copy"
 
     input:
