@@ -62,7 +62,7 @@ process simulate_reads {
 
 process simulate_reads_paired {
 
-    container 'biocontainers/wgsim:1.0--0'
+    container 'community.wave.seqera.io/library/wgsim_pip_bc:c0557f2e78d7d683'
 
     input:
     tuple val(index), val(ref_accession), val(ref_category), path(ref_fasta), val(ref_coverage), val(dataset_accession), val(platform), path(dataset_fastq1), path(dataset_fastq2)
