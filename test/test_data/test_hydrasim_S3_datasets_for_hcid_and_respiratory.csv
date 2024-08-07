@@ -1,0 +1,3 @@
+climb_id,platform,study_id,public_database_accession,human_filtered_reads_1,human_filtered_reads_2
+test_ont_1,ont,PRJNA818777,SRX14580406,s3://sra-pub-src-16/SRR18447630/BAL033.Meta.Rmhost.fq.gz.1 ,
+test_illumina_1,illumina,PRJNA644754,SAMN15486885,s3://sra-pub-src-14/SRR12180706/10.1.fq.gz.1 ,s3://sra-pub-src-14/SRR12180706/10.2.fq.gz.1 
