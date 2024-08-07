@@ -13,7 +13,6 @@ process checkPath {
 
 
 workflow {
-
     // Check input files
     if (params.reference_csv) {
         reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
