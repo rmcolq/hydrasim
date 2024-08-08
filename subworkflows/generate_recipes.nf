@@ -41,20 +41,20 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
 
-    container "community.wave.seqera.io/library/biopython:1.83--5b62ff167010f97c"
+    container "community.wave.seqera.io/library/ncbi-datasets-cli:16.15.0--6c49c04c000aaf10"
 
     input:
-    tuple val(genbank), val(category)    
+    tuple val(accession), val(category)    
 
     output:
-    tuple val(genbank), val(category), path("${genbank}_genomic.fna")
+    tuple val(accession), val(category), path("${accession}_genomic.fna")
 
     
     script:
 
     """
-    download_accessions.py $genbank "nicholas.ellaby@ukhsa.gov.uk"
-    mv ${genbank}.fasta ${genbank}_genomic.fna
+    datasets download genome accession ${accession}
+    mv ${accession}.fasta ${accession}_genomic.fna
     """
 
 }
@@ -136,13 +136,13 @@ workflow get_reference_fastas {
     main:
         reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
         subset_reference_accessions(reference_csv, params.num_iterations)
-        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.genbank}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
+        subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
         reference_accessions.tap{ to_download }
-        download_reference_fasta(to_download.map{ genbank, category, index -> [genbank, category] }.unique())
-        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ genbank, category, index, category1, fasta -> [index, genbank, category, fasta]}.set{downloaded}
-    emit:
-      downloaded
+        download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
+    //     reference_accessions.combine(download_reference_fasta.out, by: 0).map{ genbank, category, index, category1, fasta -> [index, genbank, category, fasta]}.set{downloaded}
+    // emit:
+    //   downloaded
 }
 
 workflow get_base_datasets {
@@ -169,16 +169,16 @@ workflow get_base_datasets {
 workflow generate_recipes {
     main:
         get_reference_fastas()
-        coverages = channel.from(params.coverages)
-        get_reference_fastas.out.combine(coverages).set{ references }
+        // coverages = channel.from(params.coverages)
+        // get_reference_fastas.out.combine(coverages).set{ references }
 
-        get_base_datasets()
-        references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
-        references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
-        paired_recipes.view()
-        unpaired_recipes.view()
-     emit:
-        paired = paired_recipes
-        unpaired = unpaired_recipes
+    //     get_base_datasets()
+    //     references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
+    //     references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
+    //     paired_recipes.view()
+    //     unpaired_recipes.view()
+    //  emit:
+    //     paired = paired_recipes
+    //     unpaired = unpaired_recipes
     
 }
