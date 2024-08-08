@@ -41,7 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
 
-    container "community.wave.seqera.io/library/ncbi-datasets-cli:16.15.0--6c49c04c000aaf10"
+    container "community.wave.seqera.io/library/ncbi-datasets-cli_pip_alpine:fe8963e873b6ea52"
 
     input:
     tuple val(accession), val(category)    
@@ -55,8 +55,8 @@ process download_reference_fasta {
     """
     datasets download genome accession ${accession}
     unzip -o ncbi_dataset.zip
-    output = $(readlink -f ncbi_dataset/data/*/*_genomic.fna)
-    mv $output ${accession}_genomic.fna
+    output="\$(readlink -f ncbi_dataset/data/*/*_genomic.fna)"
+    mv "\${output}" ${accession}_genomic.fna
     """
 
 }
