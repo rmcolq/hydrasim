@@ -142,9 +142,9 @@ workflow get_reference_fastas {
 
         reference_accessions.tap{ to_download }
         download_reference_fasta(to_download.map{ accession, category, index -> [accession, category] }.unique())
-    //     reference_accessions.combine(download_reference_fasta.out, by: 0).map{ genbank, category, index, category1, fasta -> [index, genbank, category, fasta]}.set{downloaded}
-    // emit:
-    //   downloaded
+        reference_accessions.combine(download_reference_fasta.out, by: 0).map{ accession, category, index, category1, fasta -> [index, accession, category, fasta]}.set{downloaded}
+    emit:
+      downloaded
 }
 
 workflow get_base_datasets {
@@ -171,16 +171,16 @@ workflow get_base_datasets {
 workflow generate_recipes {
     main:
         get_reference_fastas()
-        // coverages = channel.from(params.coverages)
-        // get_reference_fastas.out.combine(coverages).set{ references }
+        coverages = channel.from(params.coverages)
+        get_reference_fastas.out.combine(coverages).set{ references }
 
-    //     get_base_datasets()
-    //     references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
-    //     references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
-    //     paired_recipes.view()
-    //     unpaired_recipes.view()
-    //  emit:
-    //     paired = paired_recipes
-    //     unpaired = unpaired_recipes
+        get_base_datasets()
+        references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
+        references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
+        paired_recipes.view()
+        unpaired_recipes.view()
+     emit:
+        paired = paired_recipes
+        unpaired = unpaired_recipes
     
 }
