@@ -54,7 +54,9 @@ process download_reference_fasta {
 
     """
     datasets download genome accession ${accession}
-    mv ${accession}.fasta ${accession}_genomic.fna
+    unzip -o ncbi_dataset.zip
+    output = $(readlink -f ncbi_dataset/data/*/*_genomic.fna)
+    mv $output ${accession}_genomic.fna
     """
 
 }
