@@ -41,7 +41,7 @@ process subset_dataset_accessions {
 process download_reference_fasta {
     label "process_low"
 
-    container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip_pip_alpine:37853e4e75258f1a"
+    container "community.wave.seqera.io/library/ncbi-datasets-cli_unzip:ec913708564558ae"
 
     input:
     tuple val(accession), val(category)    
