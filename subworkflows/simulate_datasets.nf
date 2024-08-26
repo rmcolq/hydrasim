@@ -1,8 +1,6 @@
 #!/usr/bin/env nextflow
 import java.nio.file.Paths
 
-include { generate_recipes } from '../subworkflows/generate_recipes'
-
 
 process downsample_dataset {
 
@@ -149,12 +147,12 @@ workflow generate_paired {
 }
 
 workflow simulate_datasets {
-
+    take:
+        paired_recipes
+        unpaired_recipes
     main:
-
-        generate_recipes()
-        generate_unpaired(generate_recipes.out.unpaired)
-        generate_paired(generate_recipes.out.paired)
+        generate_unpaired(unpaired_recipes)
+        generate_paired(paired_recipes)
         generate_unpaired.out.view()
         generate_paired.out.view()
 }

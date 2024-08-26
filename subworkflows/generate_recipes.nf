@@ -16,7 +16,7 @@ process subset_reference_accessions {
 
     script:
     """
-    subset_accessions.py ${params.reference_csv} "references.csv" category_id ${sample_size} 
+    subset_accessions.py ${reference_csv} "references.csv" category_id ${sample_size}
     """
 }
 
@@ -34,7 +34,7 @@ process subset_dataset_accessions {
 
     script:
     """
-    subset_accessions.py ${params.dataset_csv} "dataset.csv" platform ${sample_size} 
+    subset_accessions.py ${dataset_csv} "dataset.csv" platform ${sample_size}
     """
 }
 
@@ -135,8 +135,9 @@ workflow get_base_fastq_paired {
 }
 
 workflow get_reference_fastas {
+    take:
+        reference_csv
     main:
-        reference_csv = file(params.reference_csv, type: "file", checkIfExists:true)
         subset_reference_accessions(reference_csv, params.num_iterations)
         subset_reference_accessions.out.splitCsv(header: true).map { row -> tuple("${row.accession}","${row.category_id}", "${row.index}") }.set{ reference_accessions }
 
@@ -148,8 +149,9 @@ workflow get_reference_fastas {
 }
 
 workflow get_base_datasets {
+    take:
+        dataset_csv
     main:
-        dataset_csv = file(params.dataset_csv, type: "file", checkIfExists:true)
         subset_dataset_accessions(dataset_csv, params.num_iterations)
         subset_dataset_accessions.out.splitCsv(header: true).map{row -> ["${row.public_database_accession}","${row.platform}","${row.index}","${row.human_filtered_reads_1}","${row.human_filtered_reads_2}"]}.set{ dataset_accessions }
 
@@ -169,12 +171,15 @@ workflow get_base_datasets {
 }
 
 workflow generate_recipes {
+    take:
+        reference_csv
+        dataset_csv
     main:
-        get_reference_fastas()
+        get_reference_fastas(reference_csv)
         coverages = channel.from(params.coverages)
         get_reference_fastas.out.combine(coverages).set{ references }
 
-        get_base_datasets()
+        get_base_datasets(dataset_csv)
         references.combine(get_base_datasets.out.paired, by: 0).set{ paired_recipes }
         references.combine(get_base_datasets.out.unpaired, by: 0).set{ unpaired_recipes }
         paired_recipes.view()
@@ -182,5 +187,4 @@ workflow generate_recipes {
      emit:
         paired = paired_recipes
         unpaired = unpaired_recipes
-    
 }

@@ -25,11 +25,7 @@ workflow {
         exit 1, "Dataset CSV be provided -- aborting"
     }
 
-    println "${projectDir}"
-    println params.reference_csv
-    println params.dataset_csv
-    
-
-    simulate_datasets()
+    generate_recipes(reference_csv, dataset_csv)
+    simulate_datasets(generate_recipes.out.paired, generate_recipes.out.unpaired)
 
 }
